@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Quest — Save for Your Dream Setup</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b16;
+      --panel: #11182a;
+      --muted: #9ca9c7;
+      --text: #f3f6ff;
+      --cyan: #57f3ff;
+      --purple: #a78bfa;
+      --green: #7dffb2;
+      --pink: #ff70c8;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: var(--bg);
+      font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .app {
+      max-width: 700px;
+      width: 100%;
+      background: var(--panel);
+      border-radius: 2.5rem;
+      padding: 2rem 2rem 2.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 2px #2a3650 inset;
+      border: 1px solid rgba(87, 243, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-shadow: 0 0 12px rgba(87, 243, 255, 0.5);
+      margin-bottom: 0.25rem;
+    }
+    h1 span {
+      font-size: 2.4rem;
+    }
+    .subhead {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #2a3650;
+      padding-bottom: 0.75rem;
+    }
+    .balance-box {
+      background: #0a101f;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #2a3650;
+      box-shadow: 0 0 30px rgba(87, 243, 255, 0.1);
+      margin-bottom: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .balance-label {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .balance-value {
+      font-size: 4rem;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: 0 0 25px var(--cyan);
+      line-height: 1.2;
+    }
+    .balance-value small {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-shadow: none;
+    }
+    .goal-tracker {
+      margin-top: 0.5rem;
+      background: #1a2238;
+      height: 12px;
+      border-radius: 99px;
+      overflow: hidden;
+      border: 1px solid #2a3650;
+    }
+    .goal-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      border-radius: 99px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 20px var(--cyan);
+    }
+    .goal-text {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .input-group {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .input-group input {
+      flex: 1;
+      background: #0a101f;
+      border: 1px solid #2a3650;
+      border-radius: 1.5rem;
+      padding: 1rem 1.5rem;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 500;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-group input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(87, 243, 255, 0.4);
+    }
+    .input-group input::placeholder {
+      color: #4a5a7a;
+    }
+    button {
+      border: none;
+      background: var(--cyan);
+      color: #080b16;
+      font-weight: 700;
+      padding: 1rem 2rem;
+      border-radius: 1.5rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      box-shadow: 0 0 15px rgba(87, 243, 255, 0.4);
+    }
+    button:hover {
+      background: #7df7ff;
+      box-shadow: 0 0 30px var(--cyan);
+      transform: scale(1.02);
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    button.secondary {
+      background: #1f2a44;
+      color: var(--text);
+      box-shadow: none;
+      border: 1px solid #3a4a6a;
+    }
+    button.secondary:hover {
+      background: #2a3650;
+      border-color: var(--pink);
+      box-shadow: 0 0 15px rgba(255, 112, 200, 0.3);
+    }
+    .actions {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .actions button {
+      flex: 1;
+      justify-content: center;
+      padding: 0.9rem 1.2rem;
+      font-size: 1rem;
+    }
+    .cert-area {
+      background: #0a101f;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 2px dashed #2a3650;
+      margin-top: 1rem;
+      transition: 0.3s;
+    }
+    .cert-area.unlocked {
+      border-color: var(--green);
+      box-shadow: 0 0 30px rgba(125, 255, 178, 0.2);
+    }
+    .cert-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .cert-header span {
+      font-size: 1.8rem;
+    }
+    .cert-preview {
+      font-size: 0.95rem;
+      color: #b7c2dd;
+      line-height: 1.6;
+      padding: 0.5rem 0;
+    }
+    .cert-preview strong {
+      color: var(--text);
+    }
+    .cert-btn {
+      margin-top: 0.8rem;
+      background: var(--green);
+      color: #080b16;
+      width: 100%;
+      justify-content: center;
+      padding: 1rem;
+      font-weight: 700;
+    }
+    .cert-btn:disabled {
+      opacity: 0.3;
+      pointer-events: none;
+      background: #3a4a6a;
+      color: var(--muted);
+      box-shadow: none;
+    }
+    /* confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+    /* celebration glow */
+    .celebrate-glow {
+      animation: glowPulse 0.6s ease-in-out 2;
+    }
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 20px var(--cyan), 0 0 0 2px var(--cyan) inset; }
+      50% { box-shadow: 0 0 80px var(--cyan), 0 0 30px var(--cyan) inset; }
+      100% { box-shadow: 0 0 20px var(--cyan), 0 0 0 2px var(--cyan) inset; }
+    }
+    .big-celebration {
+      animation: bigPulse 0.8s ease-in-out 3;
+    }
+    @keyframes bigPulse {
+      0% { box-shadow: 0 0 40px var(--pink), 0 0 0 4px var(--pink) inset; }
+      50% { box-shadow: 0 0 120px var(--pink), 0 0 50px var(--pink) inset; }
+      100% { box-shadow: 0 0 40px var(--pink), 0 0 0 4px var(--pink) inset; }
+    }
+    /* toast message */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1f2a44;
+      color: var(--text);
+      padding: 0.9rem 2rem;
+      border-radius: 99px;
+      font-weight: 600;
+      border: 1px solid var(--cyan);
+      box-shadow: 0 0 30px rgba(87, 243, 255, 0.3);
+      opacity: 0;
+      transition: 0.3s ease;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="app" id="app">
+  <h1>
+    <span>🖥️</span> PC Quest
+  </h1>
+  <div class="subhead">
+    <span>Save for your dream setup</span>
+    <span>🎯 4,000 SAR</span>
+  </div>
+
+  <div class="balance-box" id="balanceBox">
+    <div class="balance-label">Total savings</div>
+    <div class="balance-value"><span id="balanceDisplay">0</span> <small>SAR</small></div>
+    <div class="goal-tracker">
+      <div class="goal-fill" id="goalFill"></div>
+    </div>
+    <div class="goal-text">
+      <span id="goalPercent">0%</span>
+      <span>4,000 SAR</span>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <input type="number" id="depositInput" placeholder="Enter amount (SAR)" min="1" step="1" value="100">
+    <button id="depositBtn">✨ Deposit</button>
+  </div>
+
+  <div class="actions">
+    <button class="secondary" id="resetBtn" disabled>🔒 Reset</button>
+  </div>
+
+  <div class="cert-area" id="certArea">
+    <div class="cert-header">
+      <span>📜</span> Gaming PC Certificate
+    </div>
+    <div class="cert-preview" id="certPreview">
+      Reach 4,000 SAR to unlock your personalized certificate.
+    </div>
+    <button class="cert-btn" id="certDownloadBtn" disabled>⬇️ Download / Print Certificate</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Added!</div>
+
+<script>
+  (function() {
+    // ---------- STATE ----------
+    let savings = 0;
+    const GOAL = 4000;
+    const STORAGE_KEY = 'pcQuestSavings_v1';
+    let completed = false;
+    let certUnlocked = false;
+    let userName = 'Champion';
+
+    // DOM elements
+    const balanceDisplay = document.getElementById('balanceDisplay');
+    const goalFill = document.getElementById('goalFill');
+    const goalPercent = document.getElementById('goalPercent');
+    const depositInput = document.getElementById('depositInput');
+    const depositBtn = document.getElementById('depositBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const certArea = document.getElementById('certArea');
+    const certPreview = document.getElementById('certPreview');
+    const certDownloadBtn = document.getElementById('certDownloadBtn');
+    const toast = document.getElementById('toast');
+    const balanceBox = document.getElementById('balanceBox');
+    const app = document.getElementById('app');
+
+    // ---------- CANVAS CONFETTI ----------
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createConfetti(count = 80, colors = ['#57f3ff', '#a78bfa', '#7dffb2', '#ff70c8', '#f9c74f']) {
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.4 - canvas.height * 0.2,
+          size: Math.random() * 8 + 4,
+          speedY: Math.random() * 6 + 3,
+          speedX: (Math.random() - 0.5) * 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 12,
+          opacity: 1,
+          life: 1,
+        });
+      }
+      if (!animationId) animateConfetti();
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.rotation += p.rotSpeed;
+        p.life -= 0.006;
+        p.opacity = Math.max(0, p.life);
+        p.speedY += 0.08; // gravity
+
+        if (p.y > canvas.height + 50 || p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+        alive = true;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = p.opacity;
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 15;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      }
+      if (alive || particles.length > 0) {
+        animationId = requestAnimationFrame(animateConfetti);
+      } else {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    // ---------- CELEBRATION SOUND (Web Audio) ----------
+    function playCelebrationSound(big = false) {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const audioCtx = new AudioCtx();
+        const now = audioCtx.currentTime;
+        const notes = big ? [523.25, 659.25, 783.99, 1046.5] : [523.25, 659.25, 783.99];
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, now + i * 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.12, now + i * 0.08 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.4);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.5);
+        });
+        if (big) {
+          // extra sparkle
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.type = 'triangle';
+          osc2.frequency.value = 1318.51;
+          gain2.gain.setValueAtTime(0.0001, now + 0.3);
+          gain2.gain.exponentialRampToValueAtTime(0.08, now + 0.35);
+          gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.8);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.start(now + 0.3);
+          osc2.stop(now + 0.85);
+        }
+        setTimeout(() => audioCtx.close(), 1200);
+      } catch (e) { /* ignore audio errors */ }
+    }
+
+    // ---------- UI UPDATES ----------
+    function updateUI() {
+      const percent = Math.min(100, (savings / GOAL) * 100);
+      balanceDisplay.textContent = savings.toLocaleString();
+      goalFill.style.width = percent + '%';
+      goalPercent.textContent = Math.floor(percent) + '%';
+
+      const isCompleted = savings >= GOAL;
+
+      // Cert unlock logic
+      if (isCompleted && !certUnlocked) {
+        certUnlocked = true;
+        completed = true;
+        certArea.classList.add('unlocked');
+        certPreview.innerHTML = `🎉 <strong>Certificate unlocked!</strong><br>Name: <strong>${userName}</strong><br>Date: <strong>${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}</strong><br>Saved: <strong>4,000 SAR</strong>`;
+        certDownloadBtn.disabled = false;
+        // Big celebration
+        playCelebrationSound(true);
+        createConfetti(180, ['#ff70c8', '#f9c74f', '#7dffb2', '#57f3ff', '#a78bfa', '#ff4d6d']);
+        app.classList.add('big-celebration');
+        setTimeout(() => app.classList.remove('big-celebration'), 2500);
+      } else if (!isCompleted && certUnlocked) {
+        // Reset cert if savings drop (shouldn't happen with no reset, but safe)
+        certUnlocked = false;
+        certArea.classList.remove('unlocked');
+        certPreview.textContent = `Reach 4,000 SAR to unlock your personalized certificate.`;
+        certDownloadBtn.disabled = true;
+      }
+
+      // Reset button protection: never enable reset if savings > 0
+      resetBtn.disabled = savings > 0;
+      if (savings > 0) {
+        resetBtn.textContent = '🔒 Reset (locked)';
+      } else {
+        resetBtn.textContent = '🔓 Reset (empty)';
+      }
+
+      // Save to localStorage
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        savings: savings,
+        userName: userName,
+        completed: completed
+      }));
+    }
+
+    // ---------- DEPOSIT ----------
+    function handleDeposit() {
+      const raw = depositInput.value.trim();
+      const amount = parseFloat(raw);
+      if (isNaN(amount) || amount <= 0) {
+        showToast('⚠️ Enter a positive amount');
+        return;
+      }
+      const intAmount = Math.floor(amount);
+      if (intAmount <= 0) {
+        showToast('⚠️ Enter at least 1 SAR');
+        return;
+      }
+
+      const wasBelowGoal = savings < GOAL;
+      savings += intAmount;
+      if (savings > 999999) savings = 999999; // cap
+
+      // Animated glow on balance box
+      balanceBox.classList.add('celebrate-glow');
+      setTimeout(() => balanceBox.classList.remove('celebrate-glow'), 1200);
+
+      // Confetti & sound for deposit
+      createConfetti(60, ['#57f3ff', '#a78bfa', '#7dffb2', '#ff70c8']);
+      playCelebrationSound(false);
+
+      // Toast
+      showToast(`✨ +${intAmount} SAR added!`);
+
+      // Clear input
+      depositInput.value = '';
+      depositInput.focus();
+
+      updateUI();
+
+      // If just crossed goal, extra celebration already handled in updateUI
+      if (wasBelowGoal && savings >= GOAL) {
+        // updateUI handles big celebration
+      }
+    }
+
+    // ---------- SHOW TOAST ----------
+    let toastTimeout;
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2200);
+    }
+
+    // ---------- CERTIFICATE DOWNLOAD ----------
+    function downloadCertificate() {
+      if (!certUnlocked || savings < GOAL) return;
+
+      const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const certHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>PC Quest Certificate</title>
+<style>
+  body { background: #080b16; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+  .cert { background: #11182a; border: 4px solid #57f3ff; border-radius: 40px; padding: 60px 70px; max-width: 800px; text-align: center; box-shadow: 0 0 80px rgba(87,243,255,0.4); }
+  h1 { color: #57f3ff; font-size: 3.5rem; margin: 0 0 10px; text-shadow: 0 0 20px #57f3ff; }
+  h2 { color: #a78bfa; font-size: 1.8rem; margin-top: 0; }
+  .name { color: #fff; font-size: 3rem; font-weight: 700; margin: 30px 0 10px; border-bottom: 2px dashed #7dffb2; padding-bottom: 15px; }
+  .date { color: #b7c2dd; font-size: 1.2rem; }
+  .goal { color: #7dffb2; font-size: 1.8rem; font-weight: 700; margin: 30px 0; }
+  .badge { font-size: 4rem; margin: 20px 0; }
+  .footer { color: #9ca9c7; font-size: 0.9rem; margin-top: 40px; }
+</style></head>
+<body>
+<div class="cert">
+  <div class="badge">🏆🖥️</div>
+  <h1>PC QUEST</h1>
+  <h2>Certificate of Achievement</h2>
+  <div class="name">${userName}</div>
+  <div class="date">${dateStr}</div>
+  <div class="goal">Saved 4,000 SAR for their dream gaming PC</div>
+  <div class="footer">Congratulations on reaching your goal! 🎮✨</div>
+</div>
+</body>
+</html>`;
+
+      const blob = new Blob([certHtml], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const win = window.open(url, '_blank');
+      if (!win) {
+        showToast('⚠️ Popup blocked. Allow popups to view certificate.');
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+
+    // ---------- INIT / LOAD ----------
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          savings = data.savings || 0;
+          userName = data.userName || 'Champion';
+          completed = data.completed || false;
+          if (savings >= GOAL) {
+            completed = true;
+            certUnlocked = true;
+            certArea.classList.add('unlocked');
+            certPreview.innerHTML = `🎉 <strong>Certificate unlocked!</strong><br>Name: <strong>${userName}</strong><br>Date: <strong>${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}</strong><br>Saved: <strong>4,000 SAR</strong>`;
+            certDownloadBtn.disabled = false;
+          }
+        } catch (e) { /* ignore */ }
+      }
+      // Ensure reset is locked if savings > 0
+      updateUI();
+    }
+
+    // ---------- EVENT LISTENERS ----------
+    depositBtn.addEventListener('click', handleDeposit);
+    depositInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleDeposit();
+    });
+
+    // Reset button – locked if savings > 0
+    resetBtn.addEventListener('click', () => {
+      if (savings > 0) {
+        showToast('🔒 Progress locked — cannot reset.');
+        return;
+      }
+      // Only allow reset when savings === 0
+      savings = 0;
+      completed = false;
+      certUnlocked = false;
+      certArea.classList.remove('unlocked');
+      certPreview.textContent = `Reach 4,000 SAR to unlock your personalized certificate.`;
+      certDownloadBtn.disabled = true;
+      updateUI();
+      showToast('🔄 Reset to zero.');
+    });
+
+    certDownloadBtn.addEventListener('click', downloadCertificate);
+
+    // ---------- INITIAL LOAD ----------
+    loadState();
+
+    // Set deposit input default
+    depositInput.value = '100';
+
+    // Ensure canvas particles don't start empty
+    // Preload a few for visual interest? No.
+  })();
+</script>
+</body>
+</html>
